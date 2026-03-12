@@ -444,11 +444,9 @@
     </script>
     <script>
 
-const teacherNumber = "+254720878925";
-
 document.querySelectorAll("form").forEach(form => {
 
-form.addEventListener("submit", function(e){
+form.addEventListener("submit", async function(e){
 
 e.preventDefault();
 
@@ -462,33 +460,42 @@ let date = this.querySelector('input[type="date"]').value;
 let name = this.querySelector('#name').value;
 let contact = this.querySelector('#contact').value;
 let location = this.querySelector('#location').value;
-let evidence = this.querySelector('#evidence').files.length;
+let evidence = this.querySelector('#evidence').files[0];
 
-let evidenceNote = evidence > 0
-? "Evidence selected. Please attach it in WhatsApp"
-: "No evidence selected.";
+let formData = new FormData();
 
-let message =
-`SAMARITAN REPORT
+formData.append("mainCategory", mainCategory);
+formData.append("category", category);
+formData.append("date", date);
+formData.append("name", name);
+formData.append("contact", contact);
+formData.append("location", location);
 
-Main Category: ${mainCategory}
-Sub Category: ${category}
+if(evidence){
+formData.append("evidence", evidence);
+}
 
-Date: ${date}
-Name: ${name}
-Contact: ${contact}
-Location: ${location}
+try{
 
-${evidenceNote}`;
+let response = await fetch("https://win8073.site4now.net:8172/MsDeploy.axd?site=dreaven-001-site1",{
+method:"POST",
+body: formData
+});
 
-let url =
-`https://wa.me/${teacherNumber}?text=${encodeURIComponent(message)}`;
+let result = await response.json();
 
-window.open(url, "_blank");
+alert("Report submitted successfully");
+
+}catch(err){
+
+alert("Submission failed");
+
+}
 
 });
 
 });
+
 
 </script>
 <script>
