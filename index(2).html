@@ -1,0 +1,484 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Samaritan - Report System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .accordion {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .accordion:hover {
+            background-color: #45a049;
+        }
+        .panel {
+            display: none;
+            background-color: #f1f1f1;
+            padding: 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>The Samaritan - Report System</h1>
+
+        <!-- Title: Explicit Nudity -->
+        <button class="accordion">Explicit Nudity</button>
+        <div class="panel">
+            <button class="accordion">Adult Nudity</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Sexually Suggestive</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Sexual Exploitation</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Child Harassment</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Sharing Private Images</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Title: Violence and Harassment -->
+        <button class="accordion">Violence and Harassment</button>
+        <div class="panel">
+            <button class="accordion">Graphic Violence</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Death/Severe Injury</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Violent Threat</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Harassment</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Title: Unauthorized Sales -->
+        <button class="accordion">Unauthorized Sales</button>
+        <div class="panel">
+            <button class="accordion">Illegal Drugs</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Counterfeit Products</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <button class="accordion">Unlicensed Sales</button>
+            <div class="panel">
+                <form>
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact:</label>
+                        <input type="text" id="contact" name="contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="evidence">Upload Evidence:</label>
+                        <input type="file" id="evidence" name="evidence">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
+    <script>
+
+const teacherNumber = "254787892960";
+
+document.querySelectorAll("form").forEach(form => {
+
+form.addEventListener("submit", function(e){
+
+e.preventDefault();
+
+let category =
+this.closest(".panel").previousElementSibling.innerText;
+
+let mainCategory =
+this.closest(".panel").parentElement.previousElementSibling.innerText;
+
+let date = this.querySelector('input[type="date"]').value;
+let name = this.querySelector('#name').value;
+let contact = this.querySelector('#contact').value;
+let location = this.querySelector('#location').value;
+let evidence = this.querySelector('#evidence').files.length;
+
+let evidenceNote = evidence > 0
+? "Evidence selected. Please attach it in WhatsApp"
+: "No evidence selected.";
+
+let message =
+`SAMARITAN REPORT
+
+Main Category: ${mainCategory}
+Sub Category: ${category}
+
+Date: ${date}
+Name: ${name}
+Contact: ${contact}
+Location: ${location}
+
+${evidenceNote}`;
+
+let url =
+`https://wa.me/${teacherNumber}?text=${encodeURIComponent(message)}`;
+
+window.open(url, "_blank");
+
+});
+
+});
+
+</script>
+</body>
+</html>
