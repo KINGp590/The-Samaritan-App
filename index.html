@@ -439,40 +439,64 @@
     </script>
     <script>
 
+// Teacher WhatsApp number
 const teacherNumber = "254720878925";
 
+// Auto-copy function
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => console.log("File path copied to clipboard"))
+        .catch(err => console.error("Failed to copy text: ", err));
+}
+
+// Categories - you can add more here
+const categories = [
+    "Incident Report",
+    "Missing Item",
+    "Medical Issue",
+    "Behavior Concern",
+    "Assignment Submission",
+    "Technical Issue",
+    "Other"
+];
+
+// Populate category dropdown dynamically if needed
+const categorySelects = document.querySelectorAll(".category-select");
+categorySelects.forEach(select => {
+    categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+    });
+});
+
 document.querySelectorAll("form").forEach(form => {
-    form.addEventListener("submit", async function(e){
+    form.addEventListener("submit", function(e){
         e.preventDefault();
 
-        const category = this.querySelector(".category-select")?.value || "General";
+        // Get selected category from dropdown or panel
+        const category = this.querySelector(".category-select") 
+                         ? this.querySelector(".category-select").value
+                         : this.closest(".panel")?.previousElementSibling?.innerText || "General";
+
         const date = this.querySelector('input[type="date"]').value;
         const name = this.querySelector('#name').value;
         const contact = this.querySelector('#contact').value;
         const location = this.querySelector('#location').value;
 
+        // File input
         const fileInput = this.querySelector('input[type="file"]');
-        let fileLink = "No file attached";
+        let filePath = fileInput && fileInput.files.length > 0 
+                       ? fileInput.files[0].name 
+                       : "No file attached";
 
-        if(fileInput && fileInput.files.length > 0){
-            const file = fileInput.files[0];
-
-            // Optional: Use FileReader to get base64 URL if small file (<2MB)
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            await new Promise(resolve => {
-                reader.onload = () => {
-                    fileLink = reader.result; // base64 URL
-                    resolve();
-                };
-            });
-
-            // Auto-copy file link
-            navigator.clipboard.writeText(fileLink)
-                .then(() => console.log("File link copied"))
-                .catch(() => console.log("Failed to copy file link"));
+        // Auto-copy file path
+        if(filePath !== "No file attached") {
+            copyToClipboard(filePath);
         }
 
+        // WhatsApp message formatting
         let message = 
 `📌 *SAMARITAN REPORT*
 
@@ -482,23 +506,15 @@ document.querySelectorAll("form").forEach(form => {
 *Contact:* ${contact}
 *Location:* ${location}
 
-📎 Evidence: ${fileLink}
+📎 Evidence: ${filePath}
 
 Please check the attached evidence.`;
 
+        // Encode message and open WhatsApp
         const url = `https://wa.me/${teacherNumber}?text=${encodeURIComponent(message)}`;
         window.open(url, "_blank");
     });
 });
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-    .then(reg => console.log('Service Worker Registered', reg))
-    .catch(err => console.log('Service Worker Registration Failed', err));
-  });
-}
 </script>
 </body>
 </html>
