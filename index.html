@@ -432,111 +432,90 @@
         }
     </script>
  <script>
-    const SUPABASE_URL = "https://zxpgbiwdnkhuebrupcuo.supabase.co";
+const SUPABASE_URL = "https://zxpgbiwdnkhuebrupcuo.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kHMOJOWYiUBlxBPoo7yUcQ_HiCP6Wxn";
 
+// Initialize Supabase client
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 document.addEventListener("DOMContentLoaded", () => {
-
-  /* 1. RELIABLE ACCORDION SYSTEM */
+  /* ACCORDION SYSTEM */
   const acc = document.getElementsByClassName("accordion");
-
   for (let i = 0; i < acc.length; i++) {
     acc[i].addEventListener("click", function() {
       this.classList.toggle("active");
       const panel = this.nextElementSibling;
-      
-      // Better toggle logic: handles initial state correctly
-      if (panel.style.maxHeight) {
-        panel.style.maxHeight = null;
-        panel.style.padding = "0 20px";
-      } else {
-        panel.style.maxHeight = panel.scrollHeight + "px";
-        panel.style.padding = "20px";
-      }
+      panel.style.display = (panel.style.display === "block") ? "none" : "block";
     });
   }
 
-  /* 2. ENHANCED FORM SUBMISSION */
+  /* FORM SUBMISSION HANDLING */
   const forms = document.querySelectorAll("form");
 
   forms.forEach(form => {
     form.addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      // UI Feedback: Disable button to prevent double submissions
-      const submitBtn = form.querySelector('button[type="submit"]');
-      const originalBtnText = submitBtn.innerText;
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Uploading...";
-
-      // Capture Values
-      const name = form.querySelector('input[name="name"]').value;
-      const contact = form.querySelector('input[name="contact"]').value;
-      const location = form.querySelector('input[name="location"]').value;
-      const date = form.querySelector('input[name="date"]').value;
+      const name = form.querySelector('input[name="name"]').value.trim();
+      const contact = form.querySelector('input[name="contact"]').value.trim();
+      const location = form.querySelector('input[name="location"]').value.trim();
+      const date = form.querySelector('input[name="date"]').value.trim();
       const fileInput = form.querySelector('input[name="evidence"]');
       const file = fileInput.files[0];
 
-      // Get category name from the accordion button
-      const category = form.closest('.panel').previousElementSibling.innerText;
-
       if (!file) {
         alert("Please upload evidence.");
-        submitBtn.disabled = false;
-        submitBtn.innerText = originalBtnText;
         return;
       }
 
       try {
-        // A. Sanitize Filename (Remove special characters/spaces)
-        const fileExt = file.name.split('.').pop();
-        const cleanName = name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-        const fileName = `${cleanName}_${Date.now()}.${fileExt}`;
+        // Generate unique filename
+        const fileName = `${name.replace(/\s+/g,"_")}_${date}_${Date.now()}_${file.name}`;
 
-        // B. Upload to Storage
-        const { data: storageData, error: storageError } = await supabaseClient
+        // Upload file to Supabase Storage
+        const { data: uploadData, error: uploadError } = await supabaseClient
           .storage
           .from("student-files")
           .upload(fileName, file);
 
-        if (storageError) throw storageError;
+        if (uploadError) {
+          console.error(uploadError);
+          alert("Upload failed.");
+          return;
+        }
 
-        // C. Insert into Database Table (IMPORTANT!)
-        // This assumes you have a table named 'reports'
-        const { error: dbError } = await supabaseClient
+        // Get public URL for the uploaded file
+        const { data: publicUrlData } = supabaseClient
+          .storage
+          .from("student-files")
+          .getPublicUrl(fileName);
+
+        const fileUrl = publicUrlData.publicUrl;
+
+        // Save metadata to Supabase table (optional, if you have a table set up)
+        const { error: insertError } = await supabaseClient
           .from("reports")
-          .insert([{
-            reporter_name: name,
-            contact_info: contact,
-            incident_location: location,
-            incident_date: date,
-            category: category,
-            evidence_url: storageData.path
-          }]);
+          .insert([
+            { name, contact, location, date, file_url: fileUrl }
+          ]);
 
-        if (dbError) throw dbError;
+        if (insertError) {
+          console.error(insertError);
+          alert("File uploaded but saving report failed.");
+          return;
+        }
 
         alert("Report submitted successfully!");
         form.reset();
-        
-        // Collapse panel after success
-        const panel = form.closest('.panel');
-        panel.style.maxHeight = null;
-        panel.previousElementSibling.classList.remove("active");
 
       } catch(err) {
-        console.error("Submission Error:", err);
-        alert(`Error: ${err.message || "Unexpected error occurred."}`);
-      } finally {
-        // Reset button state
-        submitBtn.disabled = false;
-        submitBtn.innerText = originalBtnText;
+        console.error(err);
+        alert("Unexpected error occurred.");
       }
     });
   });
 });
+</script>
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
