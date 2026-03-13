@@ -416,104 +416,81 @@
     </div>
 
     <script>
-        var acc = document.getElementsByClassName("accordion");
-        var i;
+        // Teacher WhatsApp number
+const teacherNumber = "254720878925";
 
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-            });
-        }
-    </script>
- <script>
-const SUPABASE_URL = "https://zxpgbiwdnkhuebrupcuo.supabase.co";
-const SUPABASE_KEY = "sb_publishable_kHMOJOWYiUBlxBPoo7yUcQ_HiCP6Wxn";
+// Auto-copy function
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => console.log("File path copied to clipboard"))
+        .catch(err => console.error("Failed to copy text: ", err));
+}
 
-// Initialize Supabase client
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Categories - you can add more here
+const categories = [
+    "Incident Report",
+    "Missing Item",
+    "Medical Issue",
+    "Behavior Concern",
+    "Assignment Submission",
+    "Technical Issue",
+    "Other"
+];
 
-document.addEventListener("DOMContentLoaded", () => {
-  /* ACCORDION SYSTEM */
-  const acc = document.getElementsByClassName("accordion");
-  for (let i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
-      this.classList.toggle("active");
-      const panel = this.nextElementSibling;
-      panel.style.display = (panel.style.display === "block") ? "none" : "block";
+// Populate category dropdown dynamically if needed
+const categorySelects = document.querySelectorAll(".category-select");
+categorySelects.forEach(select => {
+    categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
     });
-  }
+});
 
-  /* FORM SUBMISSION HANDLING */
-  const forms = document.querySelectorAll("form");
+document.querySelectorAll("form").forEach(form => {
+    form.addEventListener("submit", function(e){
+        e.preventDefault();
 
-  forms.forEach(form => {
-    form.addEventListener("submit", async function(e) {
-      e.preventDefault();
+        // Get selected category from dropdown or panel
+        const category = this.querySelector(".category-select") 
+                         ? this.querySelector(".category-select").value
+                         : this.closest(".panel")?.previousElementSibling?.innerText || "General";
 
-      const name = form.querySelector('input[name="name"]').value.trim();
-      const contact = form.querySelector('input[name="contact"]').value.trim();
-      const location = form.querySelector('input[name="location"]').value.trim();
-      const date = form.querySelector('input[name="date"]').value.trim();
-      const fileInput = form.querySelector('input[name="evidence"]');
-      const file = fileInput.files[0];
+        const date = this.querySelector('input[type="date"]').value;
+        const name = this.querySelector('#name').value;
+        const contact = this.querySelector('#contact').value;
+        const location = this.querySelector('#location').value;
 
-      if (!file) {
-        alert("Please upload evidence.");
-        return;
-      }
+        // File input
+        const fileInput = this.querySelector('input[type="file"]');
+        let filePath = fileInput && fileInput.files.length > 0 
+                       ? fileInput.files[0].name 
+                       : "No file attached";
 
-      try {
-        // Generate unique filename
-        const fileName = `${name.replace(/\s+/g,"_")}_${date}_${Date.now()}_${file.name}`;
-
-        // Upload file to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabaseClient
-          .storage
-          .from("student-files")
-          .upload(fileName, file);
-
-        if (uploadError) {
-          console.error(uploadError);
-          alert("Upload failed.");
-          return;
+        // Auto-copy file path
+        if(filePath !== "No file attached") {
+            copyToClipboard(filePath);
         }
 
-        // Get public URL for the uploaded file
-        const { data: publicUrlData } = supabaseClient
-          .storage
-          .from("student-files")
-          .getPublicUrl(fileName);
+        // WhatsApp message formatting
+        let message = 
+`📌 *SAMARITAN REPORT*
 
-        const fileUrl = publicUrlData.publicUrl;
+*Category:* ${category}
+*Date:* ${date}
+*Name:* ${name}
+*Contact:* ${contact}
+*Location:* ${location}
 
-        // Save metadata to Supabase table (optional, if you have a table set up)
-        const { error: insertError } = await supabaseClient
-          .from("reports")
-          .insert([
-            { name, contact, location, date, file_url: fileUrl }
-          ]);
+📎 Evidence: ${filePath}
 
-        if (insertError) {
-          console.error(insertError);
-          alert("File uploaded but saving report failed.");
-          return;
-        }
+Please check the attached evidence.`;
 
-        alert("Report submitted successfully!");
-        form.reset();
-
-      } catch(err) {
-        console.error(err);
-        alert("Unexpected error occurred.");
-      }
+        // Encode message and open WhatsApp
+        const url = `https://wa.me/${teacherNumber}?text=${encodeURIComponent(message)}`;
+        window.open(url, "_blank");
     });
-  });
 });
 </script>
 
