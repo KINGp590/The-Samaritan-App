@@ -1,8 +1,17 @@
- <html lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Samaritan - Report System</title>
+    <link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#4CAF50">
+
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Samaritan">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -416,85 +425,68 @@
     </div>
 
     <script>
-        // Teacher WhatsApp number
-const teacherNumber = "254720878925";
+        var acc = document.getElementsByClassName("accordion");
+        var i;
 
-// Auto-copy function
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-        .then(() => console.log("File path copied to clipboard"))
-        .catch(err => console.error("Failed to copy text: ", err));
-}
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
+    <script>
 
-// Categories - you can add more here
-const categories = [
-    "Incident Report",
-    "Missing Item",
-    "Medical Issue",
-    "Behavior Concern",
-    "Assignment Submission",
-    "Technical Issue",
-    "Other"
-];
-
-// Populate category dropdown dynamically if needed
-const categorySelects = document.querySelectorAll(".category-select");
-categorySelects.forEach(select => {
-    categories.forEach(cat => {
-        const option = document.createElement("option");
-        option.value = cat;
-        option.textContent = cat;
-        select.appendChild(option);
-    });
-});
+const teacherNumber = "254720878925"; // Teacher WhatsApp number
 
 document.querySelectorAll("form").forEach(form => {
-    form.addEventListener("submit", function(e){
-        e.preventDefault();
 
-        // Get selected category from dropdown or panel
-        const category = this.querySelector(".category-select") 
-                         ? this.querySelector(".category-select").value
-                         : this.closest(".panel")?.previousElementSibling?.innerText || "General";
+form.addEventListener("submit", function(e){
 
-        const date = this.querySelector('input[type="date"]').value;
-        const name = this.querySelector('#name').value;
-        const contact = this.querySelector('#contact').value;
-        const location = this.querySelector('#location').value;
+e.preventDefault();
 
-        // File input
-        const fileInput = this.querySelector('input[type="file"]');
-        let filePath = fileInput && fileInput.files.length > 0 
-                       ? fileInput.files[0].name 
-                       : "No file attached";
+const category =
+this.closest(".panel").previousElementSibling.innzerText;
 
-        // Auto-copy file path
-        if(filePath !== "No file attached") {
-            copyToClipboard(filePath);
-        }
+const date = this.querySelector('input[type="date"]').value;
+const name = this.querySelector('#name').value;
+const contact = this.querySelector('#contact').value;
+const location = this.querySelector('#location').value;
 
-        // WhatsApp message formatting
-        let message = 
-`📌 *SAMARITAN REPORT*
+let message =
+`SAMARITAN REPORT
 
-*Category:* ${category}
-*Date:* ${date}
-*Name:* ${name}
-*Contact:* ${contact}
-*Location:* ${location}
-
-📎 Evidence: ${filePath}
+Category: ${category}
+Date: ${date}
+Name: ${name}
+Contact: ${contact}
+Location: ${location}
 
 Please check the attached evidence.`;
 
-        // Encode message and open WhatsApp
-        const url = `https://wa.me/${teacherNumber}?text=${encodeURIComponent(message)}`;
-        window.open(url, "_blank");
-    });
+let url =
+`https://wa.me/${teacherNumber}?text=${encodeURIComponent(message)}`;
+
+window.open(url);
+
 });
-</script>
+
+});
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+    .then(reg => console.log('Service Worker Registered', reg))
+    .catch(err => console.log('Service Worker Registration Failed', err));
+  });
+}
+</script>
 </body>
 </html>
