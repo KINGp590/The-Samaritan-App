@@ -416,42 +416,33 @@
     </div>
 
     <script>
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
-                }
-            });
-        }
-    </script>
-    <script>
-
-const API_URL = "http://localhost:3000/submit";
+        <script>
+const API_URL = "http://localhost:3000/submit"; // Your Node server
 
 document.querySelectorAll("form").forEach(form => {
+
     form.addEventListener("submit", async function(e){
         e.preventDefault();
 
         const formData = new FormData();
 
+        // Get category based on accordion
         const category = this.closest(".panel")?.previousElementSibling?.innerText || "General";
 
-        formData.append("category", category);
-        formData.append("date", this.querySelector('input[type="date"]').value);
-        formData.append("name", this.querySelector('#name').value);
-        formData.append("contact", this.querySelector('#contact').value);
-        formData.append("location", this.querySelector('#location').value);
+        const date = this.querySelector('input[type="date"]').value;
+        const name = this.querySelector('#name').value;
+        const contact = this.querySelector('#contact').value;
+        const location = this.querySelector('#location').value;
 
+        // Combine all details into a WhatsApp text message
+        const text = `Category: ${category}\nDate: ${date}\nName: ${name}\nContact: ${contact}\nLocation: ${location}`;
+
+        formData.append("text", text);
+
+        // Attach file if selected
         const fileInput = this.querySelector('input[type="file"]');
         if(fileInput.files.length > 0){
-            formData.append("file", fileInput.files[0]); // <-- server expects "file" key
+            formData.append("file", fileInput.files[0]); // Must be "file" to match server
         }
 
         try{
@@ -460,10 +451,10 @@ document.querySelectorAll("form").forEach(form => {
                 body: formData
             });
 
-            const result = await response.text(); // server sends text response
+            const result = await response.text();
             alert(result);
 
-            // Clear form after submission
+            // Reset form after successful submission
             form.reset();
 
         }catch(error){
@@ -471,7 +462,9 @@ document.querySelectorAll("form").forEach(form => {
             alert("Submission failed!");
         }
     });
+
 });
+</script>
 
 </script>
 </body>
