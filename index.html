@@ -419,94 +419,67 @@
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
 
-const SUPABASE_URL = "https://zxpgbiwdnkhuebrupcuo.supabase.co";
-const SUPABASE_KEY = "sb_publishable_kHMOJOWYiUBlxBPoo7yUcQ_HiCP6Wxn";
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 document.addEventListener("DOMContentLoaded", () => {
-
-  /* ACCORDION SYSTEM */
-  const acc = document.getElementsByClassName("accordion");
-
-  for (let i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
-
-      this.classList.toggle("active");
-      const panel = this.nextElementSibling;
-
-      if (panel.style.display === "block") {
-        panel.style.display = "none";
-      } else {
-        panel.style.display = "block";
-      }
-
-    });
-  }
-
-
-  /* FORM SUBMISSION HANDLING */
+  const SUPABASE_URL = "https://zxpgbiwdnkhuebrupcuo.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_kHMOJOWYiUBlxBPoo7yUcQ_HiCP6Wxn";
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const forms = document.querySelectorAll("form");
 
   forms.forEach(form => {
-
     form.addEventListener("submit", async function(e) {
-
       e.preventDefault();
 
+      // 1. Get Form Data
+      const fileInput = form.querySelector('input[name="evidence"]');
+      const file = fileInput.files[0];
       const name = form.querySelector('input[name="name"]').value;
       const contact = form.querySelector('input[name="contact"]').value;
       const location = form.querySelector('input[name="location"]').value;
       const date = form.querySelector('input[name="date"]').value;
-      const fileInput = form.querySelector('input[name="evidence"]');
+      
+      // Get the category from the button above the form
+      const category = form.closest('.panel').previousElementSibling.innerText;
 
-      const file = fileInput.files[0];
-
-      if (!file) {
-        alert("Please upload evidence.");
-        return;
-      }
+      if (!file) return alert("Please upload evidence.");
 
       try {
+        // 2. Upload File to Storage
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        const filePath = `evidence/${fileName}`;
 
-        const fileName =
-          name.replace(/\s+/g,"_") +
-          "_" +
-          date +
-          "_" +
-          Date.now() +
-          "_" +
-          file.name;
-
-        const { data, error } = await supabaseClient
-          .storage
+        const { error: uploadError } = await _supabase.storage
           .from("student-files")
-          .upload(fileName, file);
+          .upload(filePath, file);
 
-        if (error) {
-          console.error(error);
-          alert("Upload failed.");
-          return;
-        }
+        if (uploadError) throw uploadError;
 
-        alert("Report submitted successfully!");
+        // 3. Save Report Details to Database
+        const { error: dbError } = await _supabase
+          .from("reports")
+          .insert([{
+            report_type: category,
+            reporter_name: name,
+            contact_info: contact,
+            incident_location: location,
+            incident_date: date,
+            evidence_url: filePath
+          }]);
 
+        if (dbError) throw dbError;
+
+        alert("Report filed successfully! Thank you for your bravery.");
         form.reset();
+        form.closest('.panel').style.display = "none";
 
-      } catch(err) {
-
-        console.error(err);
-        alert("Unexpected error occurred.");
-
+      } catch (err) {
+        console.error("Error:", err.message);
+        alert("Submission failed: " + err.message);
       }
-
     });
-
   });
-
 });
-
 </script>
 </body>
 </html>
