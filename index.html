@@ -1,4 +1,4 @@
-<html lang="en">
+ <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -433,55 +433,95 @@
     </script>
     <script>
 
-<script>
-const API_URL = "https://saints-rain-late-hawk.trycloudflare.com"; // Your Node server
+const SUPABASE_URL = "https://zxpgbiwdnkhuebrupcuo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_kHMOJOWYiUBlxBPoo7yUcQ_HiCP6Wxn";
 
-document.querySelectorAll("form").forEach(form => {
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    form.addEventListener("submit", async function(e){
-        e.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
 
-        const formData = new FormData();
+  /* ACCORDION SYSTEM */
+  const acc = document.getElementsByClassName("accordion");
 
-        // Get category based on accordion
-        const category = this.closest(".panel")?.previousElementSibling?.innerText || "General";
+  for (let i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
 
-        const date = this.querySelector('input[type="date"]').value;
-        const name = this.querySelector('#name').value;
-        const contact = this.querySelector('#contact').value;
-        const location = this.querySelector('#location').value;
+      this.classList.toggle("active");
+      const panel = this.nextElementSibling;
 
-        // Combine all details into a WhatsApp text message
-        const text = `Category: ${category}\nDate: ${date}\nName: ${name}\nContact: ${contact}\nLocation: ${location}`;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
 
-        formData.append("text", text);
+    });
+  }
 
-        // Attach file if selected
-        const fileInput = this.querySelector('input[type="file"]');
-        if(fileInput.files.length > 0){
-            formData.append("file", fileInput.files[0]); // Must be "file" to match server
+
+  /* FORM SUBMISSION HANDLING */
+
+  const forms = document.querySelectorAll("form");
+
+  forms.forEach(form => {
+
+    form.addEventListener("submit", async function(e) {
+
+      e.preventDefault();
+
+      const name = form.querySelector('input[name="name"]').value;
+      const contact = form.querySelector('input[name="contact"]').value;
+      const location = form.querySelector('input[name="location"]').value;
+      const date = form.querySelector('input[name="date"]').value;
+      const fileInput = form.querySelector('input[name="evidence"]');
+
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please upload evidence.");
+        return;
+      }
+
+      try {
+
+        const fileName =
+          name.replace(/\s+/g,"_") +
+          "_" +
+          date +
+          "_" +
+          Date.now() +
+          "_" +
+          file.name;
+
+        const { data, error } = await supabaseClient
+          .storage
+          .from("student-files")
+          .upload(fileName, file);
+
+        if (error) {
+          console.error(error);
+          alert("Upload failed.");
+          return;
         }
 
-        try{
-            const response = await fetch(API_URL, {
-                method: "POST",
-                body: formData
-            });
+        alert("Report submitted successfully!");
 
-            const result = await response.text();
-            alert(result);
+        form.reset();
 
-            // Reset form after successful submission
-            form.reset();
+      } catch(err) {
 
-        }catch(error){
-            console.error(error);
-            alert("Submission failed!");
-        }
+        console.error(err);
+        alert("Unexpected error occurred.");
+
+      }
+
     });
 
+  });
+
 });
-</script>a
+
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
