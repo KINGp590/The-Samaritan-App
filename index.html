@@ -416,7 +416,24 @@
     </div>
 
     <script>
-        <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
+    <script>
+
+<script>
 const API_URL = "http://localhost:3000/submit"; // Your Node server
 
 document.querySelectorAll("form").forEach(form => {
@@ -464,8 +481,7 @@ document.querySelectorAll("form").forEach(form => {
     });
 
 });
-</script>
-
+</script>a
 </script>
 </body>
 </html>
