@@ -433,80 +433,43 @@
     </script>
     <script>
 
-// Teacher WhatsApp number
-const teacherNumber = "254720878925";
-
-// Auto-copy function
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-        .then(() => console.log("File path copied to clipboard"))
-        .catch(err => console.error("Failed to copy text: ", err));
-}
-
-// Categories - you can add more here
-const categories = [
-    "Incident Report",
-    "Missing Item",
-    "Medical Issue",
-    "Behavior Concern",
-    "Assignment Submission",
-    "Technical Issue",
-    "Other"
-];
-
-// Populate category dropdown dynamically if needed
-const categorySelects = document.querySelectorAll(".category-select");
-categorySelects.forEach(select => {
-    categories.forEach(cat => {
-        const option = document.createElement("option");
-        option.value = cat;
-        option.textContent = cat;
-        select.appendChild(option);
-    });
-});
+const API_URL = "http://localhost:3000/submit";
 
 document.querySelectorAll("form").forEach(form => {
-    form.addEventListener("submit", function(e){
+    form.addEventListener("submit", async function(e){
         e.preventDefault();
 
-        // Get selected category from dropdown or panel
-        const category = this.querySelector(".category-select") 
-                         ? this.querySelector(".category-select").value
-                         : this.closest(".panel")?.previousElementSibling?.innerText || "General";
+        const formData = new FormData();
 
-        const date = this.querySelector('input[type="date"]').value;
-        const name = this.querySelector('#name').value;
-        const contact = this.querySelector('#contact').value;
-        const location = this.querySelector('#location').value;
+        const category = this.closest(".panel")?.previousElementSibling?.innerText || "General";
 
-        // File input
+        formData.append("category", category);
+        formData.append("date", this.querySelector('input[type="date"]').value);
+        formData.append("name", this.querySelector('#name').value);
+        formData.append("contact", this.querySelector('#contact').value);
+        formData.append("location", this.querySelector('#location').value);
+
         const fileInput = this.querySelector('input[type="file"]');
-        let filePath = fileInput && fileInput.files.length > 0 
-                       ? fileInput.files[0].name 
-                       : "No file attached";
-
-        // Auto-copy file path
-        if(filePath !== "No file attached") {
-            copyToClipboard(filePath);
+        if(fileInput.files.length > 0){
+            formData.append("file", fileInput.files[0]); // <-- server expects "file" key
         }
 
-        // WhatsApp message formatting
-        let message = 
-`📌 *SAMARITAN REPORT*
+        try{
+            const response = await fetch(API_URL, {
+                method: "POST",
+                body: formData
+            });
 
-*Category:* ${category}
-*Date:* ${date}
-*Name:* ${name}
-*Contact:* ${contact}
-*Location:* ${location}
+            const result = await response.text(); // server sends text response
+            alert(result);
 
-📎 Evidence: ${filePath}
+            // Clear form after submission
+            form.reset();
 
-Please check the attached evidence.`;
-
-        // Encode message and open WhatsApp
-        const url = `https://wa.me/${teacherNumber}?text=${encodeURIComponent(message)}`;
-        window.open(url, "_blank");
+        }catch(error){
+            console.error(error);
+            alert("Submission failed!");
+        }
     });
 });
 
